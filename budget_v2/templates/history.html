@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BudgetIQ — History</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0B0F1A;--surface:#111827;--card:#131929;--border:#1E2D45;--border2:#243552;--sky:#38BDF8;--indigo:#818CF8;--emerald:#34D399;--rose:#F87171;--amber:#FBBF24;--pink:#F472B6;--text:#E2E8F0;--muted:#64748B;--soft:#94A3B8}
+html[data-theme="light"]{--bg:#F1F5F9;--surface:#FFFFFF;--card:#FFFFFF;--border:#CBD5E1;--border2:#94A3B8;--text:#0F172A;--muted:#64748B;--soft:#475569}
+html[data-theme="light"] body{background:var(--bg)}
+html[data-theme="light"] nav{background:rgba(241,245,249,.92)}
+html[data-theme="light"] body::before{opacity:.06}
+html[data-theme="light"] input,html[data-theme="light"] select{background:#F8FAFC;color:var(--text)}
+html[data-theme="light"] select option{background:#fff;color:#0F172A}
+.theme-btn{background:transparent;border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:8px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s;flex-shrink:0}
+.theme-btn:hover{border-color:var(--sky);color:var(--sky)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(11,15,26,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{font-size:1.4rem;font-weight:800;letter-spacing:-.5px}
+.logo .l1{color:var(--sky)}.logo .l2{color:var(--text)}
+.nav-links{display:flex;align-items:center;gap:.5rem}
+.nav-link{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500;padding:.4rem .85rem;border-radius:6px;transition:color .2s,background .2s}
+.nav-link:hover{color:var(--sky)}
+.nav-link.active{color:var(--sky);background:rgba(56,189,248,.08)}
+.btn-sample{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3);color:var(--sky);padding:.42rem 1rem;border-radius:7px;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .2s}
+.btn-sample:hover{background:rgba(56,189,248,.18)}
+
+/* LAYOUT */
+.page{max-width:1200px;margin:0 auto;padding:2rem 2rem 6rem;position:relative;z-index:1}
+.page-header{margin-bottom:2.5rem}
+.page-title{font-size:1.9rem;font-weight:800;letter-spacing:-.5px}
+.page-title span{color:var(--sky)}
+.page-sub{color:var(--muted);font-size:.82rem;margin-top:.3rem;font-family:'JetBrains Mono',monospace}
+
+/* TABS */
+.tabs{display:flex;gap:.4rem;margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab-btn{background:transparent;border:none;color:var(--muted);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;padding:.7rem 1.3rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--sky);border-bottom-color:var(--sky)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* SAVE PANEL */
+.save-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin-bottom:2rem}
+.save-panel h3{font-size:1rem;font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.6rem}
+.save-row{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end}
+.fg{display:flex;flex-direction:column;gap:.35rem;min-width:160px}
+.fg label{font-size:.75rem;font-weight:600;color:var(--soft);text-transform:uppercase;letter-spacing:.3px}
+select,input{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.58rem .9rem;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;width:100%}
+select:focus,input:focus{border-color:var(--sky)}
+select option{background:var(--surface)}
+.btn{padding:.58rem 1.3rem;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;border:none;transition:opacity .2s,background .2s}
+.btn:hover{opacity:.85}
+.btn-sky{background:var(--sky);color:#0B0F1A}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--soft)}
+.btn-outline:hover{border-color:var(--sky);color:var(--sky)}
+.btn-danger{background:transparent;border:1px solid rgba(248,113,113,.3);color:var(--rose)}
+.btn-danger:hover{background:rgba(248,113,113,.07);border-color:var(--rose)}
+
+/* MONTH PREVIEW */
+.preview-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
+.preview-stat{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+.preview-stat .label{font-size:.7rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:.4rem}
+.preview-stat .val{font-size:1.4rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.green{color:var(--emerald)}.pink{color:var(--pink)}.sky{color:var(--sky)}.amber{color:var(--amber)}.red{color:var(--rose)}
+
+/* HISTORY TABLE */
+.hist-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:2rem}
+.hist-table-head{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 1.5rem;border-bottom:1px solid var(--border)}
+.hist-table-head h3{font-size:.95rem;font-weight:700}
+.badge{background:rgba(56,189,248,.1);color:var(--sky);font-size:.72rem;font-weight:600;padding:.2rem .65rem;border-radius:10px;font-family:'JetBrains Mono',monospace}
+table{width:100%;border-collapse:collapse}
+th{background:rgba(255,255,255,.02);color:var(--muted);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:.7rem 1.2rem;text-align:left}
+td{padding:.7rem 1.2rem;font-size:.84rem;border-bottom:1px solid rgba(30,45,69,.5)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.015);cursor:pointer}
+.month-pill{background:rgba(56,189,248,.1);color:var(--sky);border:1px solid rgba(56,189,248,.2);padding:.18rem .7rem;border-radius:10px;font-size:.75rem;font-weight:600}
+.rate-good{color:var(--emerald);font-weight:600}
+.rate-ok{color:var(--amber);font-weight:600}
+.rate-bad{color:var(--rose);font-weight:600}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--muted)}
+.empty-state .emoji{font-size:2.5rem;margin-bottom:.8rem}
+.empty-state p{font-size:.9rem;line-height:1.7}
+
+/* DETAIL PANEL */
+.detail-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin-bottom:2rem;display:none}
+.detail-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem}
+.detail-title{font-size:1.1rem;font-weight:700}
+.detail-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin-bottom:1.5rem}
+.d-stat{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:.9rem}
+.d-stat .dl{font-size:.68rem;color:var(--muted);text-transform:uppercase;font-weight:600;letter-spacing:.3px;margin-bottom:.3rem}
+.d-stat .dv{font-size:1.3rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+@media(max-width:760px){.charts-row{grid-template-columns:1fr}}
+.chart-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem}
+.chart-box-title{font-size:.78rem;font-weight:600;color:var(--soft);margin-bottom:.8rem}
+.chart-img{width:100%;border-radius:6px;display:block}
+.chart-loading{height:180px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.82rem;gap:.5rem}
+.spin{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--sky);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* CAT TABLE */
+.cat-table{width:100%;border-collapse:collapse;margin-top:.5rem}
+.cat-table td{padding:.45rem .6rem;font-size:.82rem;border-bottom:1px solid rgba(30,45,69,.4)}
+.cat-table tr:last-child td{border-bottom:none}
+.cat-bar-bg{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px}
+.cat-bar-fill{height:100%;border-radius:3px;background:var(--sky)}
+
+/* COMPARE */
+.compare-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem}
+.compare-selectors{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin-bottom:1.5rem}
+@media(max-width:640px){.compare-selectors{grid-template-columns:1fr;text-align:center}}
+.vs-badge{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:var(--amber);padding:.4rem .9rem;border-radius:8px;font-weight:800;font-size:.95rem;text-align:center}
+.compare-sel-group{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
+.compare-sel-group h4{font-size:.8rem;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.9rem}
+.compare-stats-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.compare-col{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
+.compare-col h4{font-size:.88rem;font-weight:700;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.compare-col.c1 h4{color:var(--sky)}.compare-col.c2 h4{color:var(--pink)}
+.cmp-row{display:flex;justify-content:space-between;padding:.3rem 0;font-size:.84rem;border-bottom:1px solid rgba(30,45,69,.3)}
+.cmp-row:last-child{border-bottom:none}
+.cmp-label{color:var(--muted)}
+.cmp-val{font-family:'JetBrains Mono',monospace;font-weight:600}
+.diff-row{display:flex;justify-content:space-between;padding:.4rem 0;font-size:.83rem;border-bottom:1px solid rgba(30,45,69,.3)}
+.diff-row:last-child{border-bottom:none}
+.diff-up{color:var(--rose)}.diff-down{color:var(--emerald)}.diff-same{color:var(--muted)}
+
+/* TOAST */
+#toast{position:fixed;bottom:2rem;right:2rem;z-index:9999;background:var(--card);border:1px solid var(--border2);color:var(--text);padding:1rem 1.4rem;border-radius:10px;font-size:.87rem;max-width:340px;transform:translateY(120px);opacity:0;transition:all .3s;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.ok{border-left:3px solid var(--emerald)}
+#toast.err{border-left:3px solid var(--rose)}
+/* DOWNLOAD DROPDOWN */
+.dl-wrap{position:relative}
+.dl-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1rem;min-width:200px;z-index:200;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.dl-menu.open{display:block}
+.dl-menu-title{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.6rem}
+.dl-select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.5rem .7rem;border-radius:7px;font-family:'Outfit',sans-serif;font-size:.85rem;outline:none;margin-bottom:.7rem}
+.dl-select:focus{border-color:var(--sky)}
+.dl-select option{background:var(--surface)}
+.dl-wrap{position:relative}
+.dl-toggle{background:rgba(52,211,153,.1)!important;border-color:rgba(52,211,153,.35)!important;color:#34D399!important}
+.dl-toggle:hover{background:rgba(52,211,153,.2)!important}
+.dl-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1rem;min-width:200px;z-index:200;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.dl-menu.open{display:block}
+.dl-menu-title{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.6rem}
+.dl-select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.5rem .7rem;border-radius:7px;font-family:'Outfit',sans-serif;font-size:.85rem;outline:none;margin-bottom:.7rem}
+.dl-select:focus{border-color:var(--sky)}
+.dl-select option{background:var(--surface)}
+.dl-go{width:100%;background:linear-gradient(135deg,#34D399,#38BDF8);color:#0B0F1A;border:none;padding:.55rem;border-radius:7px;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .2s}
+.dl-go:hover{opacity:.85}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><span class="l1">Budget</span><span class="l2">IQ</span></div>
+  <div class="nav-links">
+    <a class="nav-link" href="/">Home</a>
+    <a class="nav-link" href="/dashboard">Dashboard</a>
+    <a class="nav-link active" href="/history">History</a>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+    <div class="dl-wrap">
+      <button class="btn-sample dl-toggle" onclick="toggleDlMenu('dl-menu-hist')">⬇️ Download CSV ▾</button>
+      <div class="dl-menu" id="dl-menu-hist">
+        <div class="dl-menu-title">Select Month</div>
+        <select class="dl-select" id="dl-month-hist">
+          <option value="">— All Months —</option>
+          <option>January</option><option>February</option><option>March</option>
+          <option>April</option><option>May</option><option>June</option>
+          <option>July</option><option>August</option><option>September</option>
+          <option>October</option><option>November</option><option>December</option>
+        </select>
+        <button class="dl-go" onclick="doDownload('dl-month-hist')">⬇️ Download</button>
+      </div>
+    </div>
+    <button class="btn-sample" onclick="quickSampleAndSave()">⚡ Load Sample</button>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title"><span>Budget</span> History</h1>
+    <div class="page-sub">Monthly snapshots saved permanently to CSV — survives server restarts</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('save')">💾 Save Month</button>
+    <button class="tab-btn" onclick="switchTab('records')">📋 All Records</button>
+    <button class="tab-btn" onclick="switchTab('detail')">🔍 Month Detail</button>
+    <button class="tab-btn" onclick="switchTab('compare')">⚖️ Compare Months</button>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       TAB 1 — SAVE MONTH
+  ══════════════════════════════════════ -->
+  <div class="tab-panel active" id="tab-save">
+
+    <!-- Month preview -->
+    <div class="save-panel">
+      <h3>📅 Preview a Month's Budget</h3>
+      <div class="save-row">
+        <div class="fg">
+          <label>Select Month</label>
+          <select id="preview-month" onchange="previewMonth()">
+            {% for m in months %}<option>{{ m }}</option>{% endfor %}
+          </select>
+        </div>
+        <button class="btn btn-outline" onclick="previewMonth()">👁 Preview</button>
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="preview-strip" id="preview-strip" style="display:none">
+      <div class="preview-stat"><div class="label">Total Income</div><div class="val green" id="pv-inc">—</div></div>
+      <div class="preview-stat"><div class="label">Total Expenses</div><div class="val pink" id="pv-exp">—</div></div>
+      <div class="preview-stat"><div class="label">Net Savings</div><div class="val sky" id="pv-sav">—</div></div>
+      <div class="preview-stat"><div class="label">Savings Rate</div><div class="val amber" id="pv-rate">—</div></div>
+      <div class="preview-stat"><div class="label">Income Entries</div><div class="val" id="pv-ic">—</div></div>
+      <div class="preview-stat"><div class="label">Expense Entries</div><div class="val" id="pv-ec">—</div></div>
+    </div>
+
+    <!-- Category breakdown for preview -->
+    <div id="preview-cats" style="display:none;margin-bottom:1.5rem">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem">
+        <div style="font-size:.85rem;font-weight:700;color:var(--soft);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.4px">Category Breakdown</div>
+        <table class="cat-table" id="pv-cat-table"></table>
+      </div>
+    </div>
+
+    <!-- Save button -->
+    <div id="preview-save-row" style="display:none;margin-bottom:2rem">
+      <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+        <div class="fg" style="min-width:100px">
+          <label>Year</label>
+          <input type="number" id="save-year" value="2024" min="2000" max="2099" style="width:110px"/>
+        </div>
+        <button class="btn btn-sky" onclick="saveMonth()" style="margin-top:1.4rem">
+          💾 Save to History
+        </button>
+        <span style="color:var(--muted);font-size:.82rem;margin-top:1.4rem">
+          Saves permanently to <code style="color:var(--sky);font-size:.78rem">data/history.csv</code>
+        </span>
+      </div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem">
+      <div style="font-size:.82rem;font-weight:700;color:var(--soft);margin-bottom:.8rem">💡 How History Works</div>
+      <div style="color:var(--muted);font-size:.83rem;line-height:1.9">
+        <b style="color:var(--text)">Step 1</b> — Enter your income and expenses on the <a href="/" style="color:var(--sky)">Home page</a><br/>
+        <b style="color:var(--text)">Step 2</b> — Come to History → Preview Month → check the numbers look right<br/>
+        <b style="color:var(--text)">Step 3</b> — Click <b style="color:var(--sky)">"Save to History"</b> — stored permanently in <code style="color:var(--sky)">data/history.csv</code><br/>
+        <b style="color:var(--text)">Step 4</b> — Next month, repeat! Old months stay saved even after server restarts.<br/>
+        <b style="color:var(--text)">Step 5</b> — Use the <b style="color:var(--amber)">Compare</b> tab to see how your spending changed month to month.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       TAB 2 — ALL RECORDS
+  ══════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-records">
+    <div class="hist-table-wrap">
+      <div class="hist-table-head">
+        <h3>📋 Saved Monthly Records</h3>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <span class="badge" id="hist-count">0 records</span>
+          <button class="btn btn-outline" style="padding:.35rem .8rem;font-size:.78rem" onclick="loadHistoryTable()">🔄 Refresh</button>
+        </div>
+      </div>
+      <div id="hist-table-body">
+        <div class="empty-state">
+          <div class="emoji">📭</div>
+          <p>No history saved yet.<br/>Go to <b>Save Month</b> tab to save your first month.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       TAB 3 — MONTH DETAIL
+  ══════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-detail">
+
+    <div class="save-panel">
+      <h3>🔍 View Month in Detail</h3>
+      <div class="save-row">
+        <div class="fg">
+          <label>Select Month</label>
+          <select id="detail-month">
+            {% for m in months %}<option>{{ m }}</option>{% endfor %}
+          </select>
+        </div>
+        <button class="btn btn-sky" onclick="loadMonthDetail()">🔍 Load Detail</button>
+      </div>
+    </div>
+
+    <div class="detail-panel" id="detail-panel">
+      <div class="detail-header">
+        <div class="detail-title" id="detail-title">Month Detail</div>
+        <div style="display:flex;gap:.6rem">
+          <button class="btn btn-sky" style="font-size:.8rem;padding:.4rem .9rem" onclick="saveFromDetail()">💾 Save to History</button>
+        </div>
+      </div>
+
+      <div class="detail-stats" id="detail-stats"></div>
+
+      <div class="charts-row">
+        <div class="chart-box">
+          <div class="chart-box-title">🍩 Spending by Category</div>
+          <div id="d-chart-cat"><div class="chart-loading"><div class="spin"></div>Loading...</div></div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-box-title">📊 Budget vs Actual</div>
+          <div id="d-chart-bva"><div class="chart-loading"><div class="spin"></div>Loading...</div></div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.2rem">
+        <div style="font-size:.78rem;font-weight:600;color:var(--soft);margin-bottom:.9rem;text-transform:uppercase;letter-spacing:.3px">Category Breakdown</div>
+        <table class="cat-table" id="detail-cat-table"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       TAB 4 — COMPARE MONTHS
+  ══════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-compare">
+
+    <div class="compare-panel">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:1.3rem">⚖️ Compare Two Saved Months</h3>
+
+      <div class="compare-selectors">
+        <!-- Month 1 -->
+        <div class="compare-sel-group">
+          <h4>Month 1</h4>
+          <div class="fg" style="margin-bottom:.8rem">
+            <label>Month</label>
+            <select id="cmp-m1">{% for m in months %}<option>{{ m }}</option>{% endfor %}</select>
+          </div>
+          <div class="fg">
+            <label>Year</label>
+            <input type="number" id="cmp-y1" value="2024" min="2000" max="2099"/>
+          </div>
+        </div>
+
+        <div class="vs-badge">VS</div>
+
+        <!-- Month 2 -->
+        <div class="compare-sel-group">
+          <h4>Month 2</h4>
+          <div class="fg" style="margin-bottom:.8rem">
+            <label>Month</label>
+            <select id="cmp-m2">{% for m in months %}<option value="{{ m }}" {% if m == 'February' %}selected{% endif %}>{{ m }}</option>{% endfor %}</select>
+          </div>
+          <div class="fg">
+            <label>Year</label>
+            <input type="number" id="cmp-y2" value="2024" min="2000" max="2099"/>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.8rem">
+        <button class="btn btn-sky" onclick="compareMonths()">⚖️ Compare Now</button>
+        <span style="color:var(--muted);font-size:.8rem;margin-left:.9rem">Both months must be saved to history first</span>
+      </div>
+
+      <!-- Compare results -->
+      <div id="compare-results" style="display:none">
+        <!-- Side by side stats -->
+        <div class="compare-stats-row" id="compare-stats-row"></div>
+
+        <!-- Differences table -->
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.5rem">
+          <div style="font-size:.8rem;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.9rem">📊 Difference (Month 2 vs Month 1)</div>
+          <div id="diff-table"></div>
+        </div>
+
+        <!-- Comparison chart -->
+        <div class="chart-box">
+          <div class="chart-box-title">📊 Side by Side Comparison Chart</div>
+          <div id="cmp-chart"><div class="chart-loading"><div class="spin"></div>Generating...</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+<div id="toast"></div>
+
+<script>
+const fmt = n => '₹' + Number(n).toLocaleString('en-IN', {maximumFractionDigits: 0});
+const fmtRate = r => Number(r).toFixed(1) + '%';
+
+// ── Download dropdown ──
+function toggleDlMenu(id) {
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.dl-menu.open').forEach(m => {
+    if (!m.parentElement.contains(e.target)) m.classList.remove('open');
+  });
+});
+function doDownload(selectId) {
+  const month = document.getElementById(selectId).value;
+  const url   = month ? `/api/download_csv?month=${month}` : '/api/download_csv';
+  location.href = url;
+  document.querySelectorAll('.dl-menu.open').forEach(m => m.classList.remove('open'));
+}
+
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 3500);
+}
+
+// ── Tab switching ──────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['save','records','detail','compare'][i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+
+  if (name === 'records') loadHistoryTable();
+}
+
+
+// ══════════════════════════════════════════════════
+// TAB 1 — SAVE MONTH
+// ══════════════════════════════════════════════════
+
+let currentPreviewMonth = '';
+
+async function previewMonth() {
+  const month = document.getElementById('preview-month').value;
+  currentPreviewMonth = month;
+
+  const r = await fetch(`/api/history/month_summary?month=${month}`);
+  const d = await r.json();
+
+  if (!d.success && d.message) {
+    toast(d.message, 'err'); return;
+  }
+
+  // Show stat strip
+  document.getElementById('preview-strip').style.display = 'grid';
+  document.getElementById('preview-save-row').style.display = 'flex';
+
+  document.getElementById('pv-inc').textContent  = fmt(d.total_income);
+  document.getElementById('pv-exp').textContent  = fmt(d.total_expenses);
+  document.getElementById('pv-ic').textContent   = d.income_count;
+  document.getElementById('pv-ec').textContent   = d.expense_count;
+
+  const savEl = document.getElementById('pv-sav');
+  savEl.textContent = fmt(d.savings);
+  savEl.className   = 'val ' + (d.savings >= 0 ? 'sky' : 'red');
+
+  const rateEl = document.getElementById('pv-rate');
+  rateEl.textContent = fmtRate(d.savings_rate);
+  rateEl.className   = 'val ' + (d.savings_rate >= 20 ? 'green' : d.savings_rate >= 10 ? 'amber' : 'red');
+
+  // Category table
+  const cat = d.category_totals || {};
+  const total_exp = d.total_expenses || 1;
+  const rows = Object.entries(cat)
+    .sort((a,b) => b[1]-a[1])
+    .map(([name, amt]) => {
+      const pct = Math.min(100, (amt / total_exp * 100)).toFixed(1);
+      return `<tr>
+        <td style="color:var(--text);width:140px">${name}</td>
+        <td style="color:var(--sky);font-family:'JetBrains Mono',monospace;font-weight:600">${fmt(amt)}</td>
+        <td style="width:120px;padding-left:1rem">
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:2px">${pct}%</div>
+          <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:${pct}%"></div></div>
+        </td>
+      </tr>`;
+    }).join('');
+
+  document.getElementById('preview-cats').style.display = rows ? 'block' : 'none';
+  document.getElementById('pv-cat-table').innerHTML = rows || '<tr><td style="color:var(--muted)">No expenses this month</td></tr>';
+}
+
+async function saveMonth() {
+  const month = document.getElementById('preview-month').value;
+  const year  = parseInt(document.getElementById('save-year').value);
+
+  const r = await fetch('/api/history/save', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({month, year})
+  });
+  const d = await r.json();
+  if (d.success) {
+    toast(d.message);
+    switchTab('records');
+  } else {
+    toast(d.message, 'err');
+  }
+}
+
+async function quickSampleAndSave() {
+  // Load sample data first
+  await fetch('/api/load_sample', {method:'POST'});
+  toast('⚡ Sample data loaded! Now save months to history...');
+  // Auto-preview January
+  document.getElementById('preview-month').value = 'January';
+  previewMonth();
+}
+
+
+// ══════════════════════════════════════════════════
+// TAB 2 — ALL RECORDS TABLE
+// ══════════════════════════════════════════════════
+
+async function loadHistoryTable() {
+  const r = await fetch('/api/history/list');
+  const d = await r.json();
+
+  document.getElementById('hist-count').textContent = d.count + ' records';
+
+  if (!d.history || d.history.length === 0) {
+    document.getElementById('hist-table-body').innerHTML = `
+      <div class="empty-state">
+        <div class="emoji">📭</div>
+        <p>No history saved yet.<br/>Go to <b>Save Month</b> tab to save your first month.</p>
+      </div>`;
+    return;
+  }
+
+  const rows = d.history.map(r => {
+    const rate     = parseFloat(r.savings_rate || 0);
+    const rateClass= rate>=20?'rate-good':rate>=10?'rate-ok':'rate-bad';
+    const sav      = parseFloat(r.savings || 0);
+    return `<tr onclick="viewFromTable('${r.month}','${r.year}')">
+      <td><span class="month-pill">${r.month}</span></td>
+      <td style="color:var(--muted);font-size:.78rem">${r.year}</td>
+      <td style="color:var(--emerald);font-family:'JetBrains Mono',monospace">${fmt(r.total_income)}</td>
+      <td style="color:var(--pink);font-family:'JetBrains Mono',monospace">${fmt(r.total_expense)}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:${sav>=0?'var(--sky)':'var(--rose)'}">${fmt(sav)}</td>
+      <td class="${rateClass}">${fmtRate(rate)}</td>
+      <td style="color:var(--muted);font-size:.75rem;font-family:'JetBrains Mono',monospace">${r.saved_on||'—'}</td>
+      <td>
+        <button class="btn btn-danger" style="font-size:.72rem;padding:.25rem .6rem"
+          onclick="event.stopPropagation();deleteRecord('${r.month}','${r.year}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('hist-table-body').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Month</th><th>Year</th><th>Income</th><th>Expenses</th>
+          <th>Savings</th><th>Rate</th><th>Saved On</th><th></th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function viewFromTable(month, year) {
+  switchTab('detail');
+  document.getElementById('detail-month').value = month;
+  loadMonthDetail();
+}
+
+async function deleteRecord(month, year) {
+  if (!confirm(`Delete ${month} ${year} from history?`)) return;
+  const r = await fetch('/api/history/delete', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({month, year})
+  });
+  const d = await r.json();
+  toast(d.success ? d.message : d.message, d.success ? 'ok' : 'err');
+  if (d.success) loadHistoryTable();
+}
+
+
+// ══════════════════════════════════════════════════
+// TAB 3 — MONTH DETAIL
+// ══════════════════════════════════════════════════
+
+let detailCurrentMonth = '';
+
+async function loadMonthDetail() {
+  const month = document.getElementById('detail-month').value;
+  detailCurrentMonth = month;
+
+  const r = await fetch(`/api/history/month_summary?month=${month}`);
+  const d = await r.json();
+
+  document.getElementById('detail-panel').style.display = 'block';
+  document.getElementById('detail-title').textContent   = `📅 ${month} — Detailed Breakdown`;
+
+  const sav    = d.savings || 0;
+  const rate   = d.savings_rate || 0;
+  document.getElementById('detail-stats').innerHTML = `
+    <div class="d-stat"><div class="dl">Income</div><div class="dv green">${fmt(d.total_income)}</div></div>
+    <div class="d-stat"><div class="dl">Expenses</div><div class="dv pink">${fmt(d.total_expenses)}</div></div>
+    <div class="d-stat"><div class="dl">Savings</div><div class="dv ${sav>=0?'sky':'red'}">${fmt(sav)}</div></div>
+    <div class="d-stat"><div class="dl">Savings Rate</div><div class="dv ${rate>=20?'green':rate>=10?'amber':'red'}">${fmtRate(rate)}</div></div>
+    <div class="d-stat"><div class="dl">Income Entries</div><div class="dv">${d.income_count}</div></div>
+    <div class="d-stat"><div class="dl">Expense Entries</div><div class="dv">${d.expense_count}</div></div>
+  `;
+
+  // Category table
+  const cat = d.category_totals || {};
+  const total_exp = d.total_expenses || 1;
+  const catRows = Object.entries(cat).sort((a,b)=>b[1]-a[1]).map(([name,amt]) => {
+    const pct = Math.min(100, amt/total_exp*100).toFixed(1);
+    return `<tr>
+      <td style="color:var(--text);width:150px">${name}</td>
+      <td style="color:var(--sky);font-family:'JetBrains Mono',monospace;font-weight:600">${fmt(amt)}</td>
+      <td style="color:var(--muted);font-size:.8rem">${pct}%</td>
+      <td style="width:160px;padding-left:1rem">
+        <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:${pct}%"></div></div>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('detail-cat-table').innerHTML = catRows || '<tr><td style="color:var(--muted);padding:.5rem 0">No expenses this month</td></tr>';
+
+  // Load charts
+  loadDetailChart('d-chart-cat', `/api/history/chart/categories?month=${month}`);
+  loadDetailChart('d-chart-bva', `/api/history/chart/bva?month=${month}`);
+}
+
+async function loadDetailChart(elId, url) {
+  const el = document.getElementById(elId);
+  el.innerHTML = '<div class="chart-loading"><div class="spin"></div>Generating...</div>';
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    el.innerHTML = `<img class="chart-img" src="data:image/png;base64,${d.chart}"/>`;
+  } catch(e) {
+    el.innerHTML = '<div class="chart-loading">❌ Error</div>';
+  }
+}
+
+async function saveFromDetail() {
+  const month = document.getElementById('detail-month').value;
+  const year  = new Date().getFullYear();
+  const r = await fetch('/api/history/save', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({month, year})
+  });
+  const d = await r.json();
+  toast(d.success ? d.message : d.message, d.success ? 'ok' : 'err');
+}
+
+
+// ══════════════════════════════════════════════════
+// TAB 4 — COMPARE
+// ══════════════════════════════════════════════════
+
+async function compareMonths() {
+  const m1 = document.getElementById('cmp-m1').value;
+  const m2 = document.getElementById('cmp-m2').value;
+  const y1 = document.getElementById('cmp-y1').value;
+  const y2 = document.getElementById('cmp-y2').value;
+
+  const r = await fetch(`/api/history/compare?month1=${m1}&month2=${m2}&year1=${y1}&year2=${y2}`);
+  const d = await r.json();
+
+  if (!d.success) { toast(d.message, 'err'); return; }
+
+  document.getElementById('compare-results').style.display = 'block';
+
+  const r1 = d.month1; const r2 = d.month2;
+
+  // Side by side stat columns
+  const fields = [
+    ['Income',   'total_income',  'green', 'green'],
+    ['Expenses', 'total_expense', 'pink',  'pink'],
+    ['Savings',  'savings',       'sky',   'sky'],
+    ['Rate',     'savings_rate',  'amber', 'amber'],
+  ];
+
+  const makeCol = (rec, label, colorClass) => {
+    const vals = fields.map(([name, key, c]) => {
+      const isRate = key === 'savings_rate';
+      const val    = parseFloat(rec[key] || 0);
+      return `<div class="cmp-row">
+        <span class="cmp-label">${name}</span>
+        <span class="cmp-val ${c}">${isRate ? fmtRate(val) : fmt(val)}</span>
+      </div>`;
+    }).join('');
+    return `<div class="compare-col ${colorClass}"><h4>${label}</h4>${vals}</div>`;
+  };
+
+  document.getElementById('compare-stats-row').innerHTML =
+    makeCol(r1, `${m1} ${y1}`, 'c1') + makeCol(r2, `${m2} ${y2}`, 'c2');
+
+  // Differences
+  const CATS = ['Food_Dining','Housing','Transportation','Entertainment',
+                'Healthcare','Education','Shopping','Utilities','Savings','Other'];
+  const CAT_LABELS = ['Food & Dining','Housing','Transportation','Entertainment',
+                      'Healthcare','Education','Shopping','Utilities','Savings','Other'];
+
+  const diffRows = [
+    {label: 'Income',   key: 'total_income',  isRate: false},
+    {label: 'Expenses', key: 'total_expense', isRate: false},
+    {label: 'Savings',  key: 'savings',        isRate: false},
+    {label: 'Rate',     key: 'savings_rate',  isRate: true},
+    ...CATS.map((k,i) => ({label: CAT_LABELS[i], key: k, isRate: false}))
+  ].filter(({key}) => {
+    const v1 = parseFloat(r1[key]||0); const v2 = parseFloat(r2[key]||0);
+    return v1>0 || v2>0;
+  }).map(({label,key,isRate}) => {
+    const v1   = parseFloat(r1[key]||0);
+    const v2   = parseFloat(r2[key]||0);
+    const diff = v2 - v1;
+    const pct  = v1 !== 0 ? (diff/v1*100).toFixed(1) : '—';
+    const cls  = diff > 0 ? 'diff-up' : diff < 0 ? 'diff-down' : 'diff-same';
+    const arrow= diff > 0 ? '▲' : diff < 0 ? '▼' : '=';
+    const sign = diff >= 0 ? '+' : '';
+    return `<div class="diff-row">
+      <span class="cmp-label">${label}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted)">${isRate?fmtRate(v1):fmt(v1)} → ${isRate?fmtRate(v2):fmt(v2)}</span>
+      <span class="${cls}" style="font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700">
+        ${arrow} ${isRate ? sign+diff.toFixed(1)+'%' : sign+fmt(Math.abs(diff))}
+        ${pct !== '—' ? `<span style="color:var(--muted);font-size:.72rem;font-weight:400"> (${sign}${pct}%)</span>` : ''}
+      </span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('diff-table').innerHTML = diffRows || '<p style="color:var(--muted);font-size:.85rem">No differences found.</p>';
+
+  // Chart
+  const cmpChart = document.getElementById('cmp-chart');
+  cmpChart.innerHTML = '<div class="chart-loading"><div class="spin"></div>Generating chart...</div>';
+  try {
+    const cr = await fetch(`/api/history/chart/compare?month1=${m1}&month2=${m2}&year1=${y1}&year2=${y2}`);
+    const cd = await cr.json();
+    cmpChart.innerHTML = `<img class="chart-img" src="data:image/png;base64,${cd.chart}"/>`;
+  } catch(e) {
+    cmpChart.innerHTML = '<div class="chart-loading">❌ Error loading chart</div>';
+  }
+}
+
+// Initial load
+previewMonth();
+
+// ── Theme toggle ──
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-btn').textContent = theme === 'light' ? '🌙' : '☀️';
+  localStorage.setItem('biq-theme', theme);
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+applyTheme(localStorage.getItem('biq-theme') || 'dark');
+
+// ── Download dropdown ──
+function toggleDlMenu(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.dl-menu.open').forEach(m => {
+    if (!m.parentElement.contains(e.target)) m.classList.remove('open');
+  });
+});
+function doDownload(selectId) {
+  const month = document.getElementById(selectId).value;
+  location.href = month ? `/api/download_csv?month=${month}` : '/api/download_csv';
+  document.querySelectorAll('.dl-menu.open').forEach(m => m.classList.remove('open'));
+}
+</script>
+</body>
+</html>

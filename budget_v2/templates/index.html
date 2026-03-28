@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BudgetIQ — Smart Budget Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:       #0B0F1A;
+  --surface:  #111827;
+  --card:     #131929;
+  --border:   #1E2D45;
+  --border2:  #243552;
+  --sky:      #38BDF8;
+  --indigo:   #818CF8;
+  --emerald:  #34D399;
+  --rose:     #F87171;
+  --amber:    #FBBF24;
+  --violet:   #A78BFA;
+  --text:     #E2E8F0;
+  --muted:    #64748B;
+  --soft:     #94A3B8;
+}
+
+/* ── LIGHT THEME ── */
+html[data-theme="light"] {
+  --bg:      #F1F5F9;
+  --surface: #FFFFFF;
+  --card:    #FFFFFF;
+  --border:  #CBD5E1;
+  --border2: #94A3B8;
+  --text:    #0F172A;
+  --muted:   #64748B;
+  --soft:    #475569;
+}
+html[data-theme="light"] body { background: var(--bg); }
+html[data-theme="light"] nav  { background: rgba(241,245,249,.92); }
+html[data-theme="light"] body::before { opacity: 0.06; }
+html[data-theme="light"] input,
+html[data-theme="light"] select { background: #F8FAFC; color: var(--text); }
+html[data-theme="light"] select option { background: #fff; color: #0F172A; }
+
+/* ── THEME TOGGLE BUTTON ── */
+.theme-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .2s, color .2s, background .2s;
+  flex-shrink: 0;
+}
+.theme-btn:hover { border-color: var(--sky); color: var(--sky); }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ─── NOISE OVERLAY ─── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2.5rem;
+  background:rgba(11,15,26,0.85);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.logo{font-size:1.4rem;font-weight:800;letter-spacing:-0.5px}
+.logo .l1{color:var(--sky)}
+.logo .l2{color:var(--text)}
+.logo .l3{color:var(--indigo)}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.nav-link{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500;padding:.4rem .8rem;border-radius:6px;transition:color .2s}
+.nav-link:hover,.nav-link.active{color:var(--sky)}
+.btn-sample{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3);color:var(--sky);padding:.45rem 1rem;border-radius:7px;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .2s}
+.btn-sample:hover{background:rgba(56,189,248,.18)}
+.btn-dash{background:var(--sky);color:#0B0F1A;padding:.45rem 1.1rem;border-radius:7px;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;border:none;transition:opacity .2s}
+.btn-dash:hover{opacity:.85}
+
+/* ─── HERO ─── */
+.hero{
+  position:relative;text-align:center;
+  padding:5rem 2rem 3.5rem;overflow:hidden;
+}
+.hero-glow{
+  position:absolute;width:700px;height:400px;
+  background:radial-gradient(ellipse, rgba(56,189,248,.07) 0%, transparent 70%);
+  top:0;left:50%;transform:translateX(-50%);pointer-events:none;
+}
+.hero-pill{
+  display:inline-block;
+  background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.25);
+  color:var(--sky);font-size:.72rem;font-weight:600;letter-spacing:1.5px;
+  text-transform:uppercase;padding:.35rem 1rem;border-radius:20px;margin-bottom:1.5rem;
+}
+.hero h1{
+  font-size:clamp(2.2rem,5vw,3.6rem);font-weight:800;line-height:1.12;
+  letter-spacing:-1px;margin-bottom:1.2rem;
+}
+.hero h1 .grad{
+  background:linear-gradient(135deg,var(--sky),var(--indigo));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-sub{color:var(--soft);font-size:1.05rem;max-width:500px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap}
+.btn-hero-primary{
+  background:linear-gradient(135deg,var(--sky),var(--indigo));
+  color:#fff;border:none;padding:.8rem 2rem;border-radius:8px;
+  font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;
+  cursor:pointer;transition:transform .2s,opacity .2s;text-decoration:none;display:inline-block;
+}
+.btn-hero-primary:hover{transform:translateY(-2px);opacity:.9}
+.btn-hero-outline{
+  background:transparent;color:var(--text);
+  border:1px solid var(--border2);padding:.8rem 2rem;border-radius:8px;
+  font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;
+  cursor:pointer;transition:border-color .2s;text-decoration:none;display:inline-block;
+}
+.btn-hero-outline:hover{border-color:var(--sky);color:var(--sky)}
+
+/* ─── TECH CHIPS ─── */
+.tech-strip{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:2rem}
+.chip{
+  background:var(--card);border:1px solid var(--border);
+  color:var(--soft);font-size:.75rem;font-weight:500;
+  padding:.3rem .85rem;border-radius:20px;font-family:'JetBrains Mono',monospace;
+}
+
+/* ─── CONTAINER ─── */
+.wrap{max-width:1080px;margin:0 auto;padding:0 2rem 5rem;position:relative;z-index:1}
+
+/* ─── SECTION LABEL ─── */
+.sec-label{
+  display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;
+}
+.sec-label h2{font-size:1.3rem;font-weight:700;color:var(--text)}
+.sec-label .dot{width:8px;height:8px;border-radius:50%;background:var(--sky);flex-shrink:0}
+.divider{border:none;border-top:1px solid var(--border);margin:3rem 0}
+
+/* ─── FEATURE CARDS ─── */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem;margin-bottom:3rem}
+.feat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;
+  transition:border-color .25s,transform .25s;
+}
+.feat-card:hover{border-color:var(--sky);transform:translateY(-3px)}
+.feat-icon{font-size:1.8rem;margin-bottom:.8rem}
+.feat-card h3{font-size:1rem;font-weight:600;margin-bottom:.4rem}
+.feat-card p{color:var(--soft);font-size:.83rem;line-height:1.6}
+
+/* ─── FORM GRID ─── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:720px){.form-grid{grid-template-columns:1fr}}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem}
+.form-card-title{font-size:1rem;font-weight:700;margin-bottom:1.4rem;display:flex;align-items:center;gap:.6rem}
+.form-card-title .icon{font-size:1.3rem}
+.fg{margin-bottom:1rem}
+.fg label{display:block;font-size:.78rem;font-weight:600;color:var(--soft);margin-bottom:.35rem;letter-spacing:.3px;text-transform:uppercase}
+input,select{
+  width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);
+  padding:.6rem .9rem;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.9rem;
+  outline:none;transition:border-color .2s;
+}
+input:focus,select:focus{border-color:var(--sky)}
+select option{background:var(--surface)}
+.btn-add{
+  width:100%;padding:.72rem;border-radius:8px;border:none;
+  font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:700;
+  cursor:pointer;transition:opacity .2s;margin-top:.3rem;
+}
+.btn-add:hover{opacity:.85}
+.btn-add-green{background:linear-gradient(135deg,#065f46,#059669);color:#fff}
+.btn-add-blue{background:linear-gradient(135deg,#1e40af,#4f46e5);color:#fff}
+
+/* ─── UPLOAD ZONE ─── */
+.upload-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem}
+.upload-mode{display:flex;gap:1.5rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.upload-mode label{
+  display:flex;align-items:center;gap:.5rem;cursor:pointer;
+  font-size:.85rem;font-weight:500;color:var(--soft);
+}
+.upload-mode input[type=radio]{accent-color:var(--sky);width:auto;cursor:pointer}
+.upload-mode label:has(input:checked){color:var(--text)}
+.drop-zone{
+  border:2px dashed var(--border2);border-radius:10px;padding:2.5rem;
+  text-align:center;cursor:pointer;transition:border-color .2s,background .2s;
+}
+.drop-zone:hover,.drop-zone.over{border-color:var(--sky);background:rgba(56,189,248,.04)}
+.drop-icon{font-size:2.2rem;margin-bottom:.6rem}
+.drop-zone p{color:var(--soft);font-size:.88rem}
+.drop-zone strong{color:var(--sky)}
+.csv-hint{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:.9rem 1rem;margin-top:1rem;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);line-height:1.8;
+}
+.csv-hint span{color:var(--sky)}
+.upload-status{margin-top:.9rem;font-size:.85rem;min-height:1.2rem}
+
+/* ─── TOOLBAR ─── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem}
+.btn-sm{
+  background:transparent;border:1px solid var(--border);color:var(--soft);
+  padding:.45rem 1rem;border-radius:7px;font-family:'Outfit',sans-serif;font-size:.8rem;
+  font-weight:500;cursor:pointer;transition:all .2s;
+}
+.btn-sm:hover{border-color:var(--sky);color:var(--sky)}
+.btn-sm.danger{border-color:rgba(248,113,113,.3);color:var(--rose)}
+.btn-sm.danger:hover{border-color:var(--rose);background:rgba(248,113,113,.06)}
+
+/* ─── TOAST ─── */
+#toast{
+  position:fixed;bottom:2rem;right:2rem;z-index:9999;
+  background:var(--card);border:1px solid var(--border2);
+  color:var(--text);padding:1rem 1.4rem;border-radius:10px;
+  font-size:.88rem;max-width:340px;
+  transform:translateY(120px);opacity:0;transition:all .3s;
+  box-shadow:0 8px 30px rgba(0,0,0,.4);
+}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.ok{border-left:3px solid var(--emerald)}
+#toast.err{border-left:3px solid var(--rose)}
+
+/* ─── LIVE COUNTER ─── */
+.live-bar{
+  display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;
+}
+.live-pill{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:.5rem 1rem;font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:.5rem;
+}
+.live-pill strong{color:var(--text);font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="l1">Budget</span><span class="l2">IQ</span></div>
+  <div class="nav-right">
+    <a class="nav-link active" href="/">Home</a>
+    <a class="nav-link" href="/dashboard">Dashboard</a>
+    <a class="nav-link" href="/history">History</a>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+    <button class="btn-sample" onclick="loadSample()">⚡ Load Sample</button>
+    <button class="btn-dash" onclick="location.href='/dashboard'">Dashboard →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-pill">📊 Data Science Mini Project</div>
+  <h1>Track. Analyse.<br/><span class="grad">Predict.</span></h1>
+  <p class="hero-sub">A full-stack budget analysis app built with Flask, Pandas, and scikit-learn. Enter data, upload CSV, and get ML-powered financial insights.</p>
+  <div class="hero-btns">
+    <a href="#entry" class="btn-hero-primary">Start Tracking ↓</a>
+    <button class="btn-hero-outline" onclick="loadSample()">⚡ Load Demo Data</button>
+  </div>
+  <div class="tech-strip">
+    <span class="chip">Python</span><span class="chip">Flask</span><span class="chip">Pandas</span>
+    <span class="chip">NumPy</span><span class="chip">Matplotlib</span><span class="chip">scikit-learn</span>
+  </div>
+</section>
+
+<div class="wrap">
+
+  <!-- FEATURES -->
+  <div class="sec-label"><div class="dot"></div><h2>What this app does</h2></div>
+  <div class="feat-grid">
+    <div class="feat-card"><div class="feat-icon">💳</div><h3>Manual Entry</h3><p>Add income sources and categorized expenses with budget targets month by month.</p></div>
+    <div class="feat-card"><div class="feat-icon">📁</div><h3>CSV Import</h3><p>Upload bulk transaction data. Pandas cleans, parses and imports it automatically.</p></div>
+    <div class="feat-card"><div class="feat-icon">📊</div><h3>4 Live Charts</h3><p>Category donut, Budget vs Actual bars, Monthly trend lines, and ML forecast chart.</p></div>
+    <div class="feat-card"><div class="feat-icon">🤖</div><h3>AI Suggestions</h3><p>Checks the 50/30/20 rule, flags overspending, gives a budget health score A–F.</p></div>
+    <div class="feat-card"><div class="feat-icon">🔮</div><h3>ML Forecasting</h3><p>scikit-learn Polynomial Regression predicts your next 3 months of expenses with R² score.</p></div>
+    <div class="feat-card"><div class="feat-icon">⚡</div><h3>Real-time Updates</h3><p>Every entry instantly updates totals. Dashboard refreshes charts on demand.</p></div>
+  </div>
+
+  <hr class="divider" id="entry"/>
+
+  <!-- LIVE COUNTER -->
+  <div class="live-bar" id="live-bar">
+    <div class="live-pill">💵 Income entries: <strong id="lc-inc">0</strong></div>
+    <div class="live-pill">💳 Expense entries: <strong id="lc-exp">0</strong></div>
+    <div class="live-pill">💰 Total Income: <strong id="lc-total-inc">₹0</strong></div>
+    <div class="live-pill">📤 Total Spent: <strong id="lc-total-exp">₹0</strong></div>
+    <div class="live-pill">🏦 Savings: <strong id="lc-sav">₹0</strong></div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="sec-label" style="margin:0"><div class="dot"></div><h2>Enter Your Data</h2></div>
+    <div style="display:flex;gap:.6rem">
+      <button class="btn-sm" onclick="loadSample()">⚡ Load Sample Data</button>
+      <button class="btn-sm danger" onclick="clearAll()">🗑 Clear All</button>
+    </div>
+  </div>
+
+  <!-- FORMS -->
+  <div class="form-grid">
+
+    <!-- INCOME FORM -->
+    <div class="form-card">
+      <div class="form-card-title"><span class="icon">💵</span> Add Income</div>
+      <div class="fg">
+        <label>Source</label>
+        <input id="inc-src" type="text" placeholder="e.g. Salary, Freelance, Part-time"/>
+      </div>
+      <div class="fg">
+        <label>Amount (₹)</label>
+        <input id="inc-amt" type="number" placeholder="45000" min="1"/>
+      </div>
+      <div class="fg">
+        <label>Month</label>
+        <select id="inc-mon">
+          {% for m in months %}<option>{{m}}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="fg">
+        <label>Note (optional)</label>
+        <input id="inc-note" type="text" placeholder="Any note..."/>
+      </div>
+      <button class="btn-add btn-add-green" onclick="addIncome()">+ Add Income</button>
+    </div>
+
+    <!-- EXPENSE FORM -->
+    <div class="form-card">
+      <div class="form-card-title"><span class="icon">💳</span> Add Expense</div>
+      <div class="fg">
+        <label>Category</label>
+        <select id="exp-cat">
+          {% for c in categories %}<option>{{c}}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="fg">
+        <label>Amount Spent (₹)</label>
+        <input id="exp-amt" type="number" placeholder="8500" min="1"/>
+      </div>
+      <div class="fg">
+        <label>Budget Allocated (₹) <span style="color:var(--muted);font-size:.72rem">— for Budget vs Actual chart</span></label>
+        <input id="exp-bud" type="number" placeholder="10000" min="0"/>
+      </div>
+      <div class="fg">
+        <label>Month</label>
+        <select id="exp-mon">
+          {% for m in months %}<option>{{m}}</option>{% endfor %}
+        </select>
+      </div>
+      <button class="btn-add btn-add-blue" onclick="addExpense()">+ Add Expense</button>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- CSV UPLOAD -->
+  <div class="sec-label"><div class="dot"></div><h2>Upload CSV File</h2></div>
+  <div class="upload-card">
+    <div class="upload-mode">
+      <span style="color:var(--soft);font-size:.85rem;font-weight:600;align-self:center">On upload:</span>
+      <label><input type="radio" name="csvmode" value="replace" checked/> 🔄 Replace expenses only (keeps manual income)</label>
+      <label><input type="radio" name="csvmode" value="append"/> ➕ Add to existing data</label>
+    </div>
+
+    <div class="drop-zone" id="drop-zone"
+         onclick="document.getElementById('csv-file').click()"
+         ondragover="ev.preventDefault();this.classList.add('over')"
+         ondragleave="this.classList.remove('over')"
+         ondrop="onDrop(event)">
+      <div class="drop-icon">📂</div>
+      <p><strong>Click to upload</strong> or drag & drop</p>
+      <p style="margin-top:.3rem;font-size:.78rem;color:var(--muted)">CSV files only</p>
+    </div>
+    <input type="file" id="csv-file" accept=".csv" style="display:none" onchange="uploadCSV(this.files[0])"/>
+
+    <div class="csv-hint">
+      <span>Expected columns:</span>  category, amount, month, description, budgeted<br/>
+      <span>Example row:</span>       Food &amp; Dining, 8500, January, Groceries, 10000<br/>
+      <span>Income columns:</span>    source, income, month
+    </div>
+    <div class="upload-status" id="upload-status"></div>
+  </div>
+
+</div><!-- /wrap -->
+
+<div id="toast"></div>
+
+<script>
+const fmt = n => '₹' + Number(n).toLocaleString('en-IN', {maximumFractionDigits:0});
+
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 3500);
+}
+
+async function refreshCounters() {
+  const r = await fetch('/api/summary');
+  const d = await r.json();
+  document.getElementById('lc-inc').textContent      = d.income_count;
+  document.getElementById('lc-exp').textContent      = d.expense_count;
+  document.getElementById('lc-total-inc').textContent= fmt(d.total_income);
+  document.getElementById('lc-total-exp').textContent= fmt(d.total_expenses);
+  const sav = document.getElementById('lc-sav');
+  sav.textContent = fmt(d.savings);
+  sav.style.color = d.savings >= 0 ? 'var(--emerald)' : 'var(--rose)';
+}
+
+async function addIncome() {
+  const payload = {
+    source: document.getElementById('inc-src').value.trim() || 'Salary',
+    amount: document.getElementById('inc-amt').value,
+    month:  document.getElementById('inc-mon').value,
+    note:   document.getElementById('inc-note').value.trim()
+  };
+  if (!payload.amount || payload.amount <= 0) return toast('Enter a valid amount!', 'err');
+  const r = await fetch('/api/add_income', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+  });
+  const d = await r.json();
+  if (d.success) {
+    toast('✅ ' + d.message);
+    document.getElementById('inc-amt').value = '';
+    document.getElementById('inc-note').value = '';
+    refreshCounters();
+  } else {
+    toast(d.message, 'err');
+  }
+}
+
+async function addExpense() {
+  const payload = {
+    category:    document.getElementById('exp-cat').value,
+    amount:      document.getElementById('exp-amt').value,
+    budgeted:    document.getElementById('exp-bud').value || 0,
+    month:       document.getElementById('exp-mon').value,
+    description: ''
+  };
+  if (!payload.amount || payload.amount <= 0) return toast('Enter a valid amount!', 'err');
+  const r = await fetch('/api/add_expense', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+  });
+  const d = await r.json();
+  if (d.success) {
+    toast('✅ ' + d.message);
+    document.getElementById('exp-amt').value = '';
+    document.getElementById('exp-bud').value = '';
+    refreshCounters();
+  } else {
+    toast(d.message, 'err');
+  }
+}
+
+async function uploadCSV(file) {
+  if (!file) return;
+  const st = document.getElementById('upload-status');
+  st.style.color = 'var(--soft)'; st.textContent = '⏳ Importing...';
+
+  const mode     = document.querySelector('input[name="csvmode"]:checked').value;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('mode', mode);
+
+  const r = await fetch('/api/upload_csv', {method:'POST', body:formData});
+  const d = await r.json();
+
+  if (d.success) {
+    st.style.color = 'var(--emerald)';
+    st.innerHTML = `✅ ${d.message} &nbsp;|&nbsp; <span style="color:var(--muted)">Columns: ${d.columns.join(', ')}</span>`;
+    toast('✅ ' + d.message);
+    refreshCounters();
+  } else {
+    st.style.color = 'var(--rose)'; st.textContent = '❌ ' + d.message;
+    toast(d.message, 'err');
+  }
+  document.getElementById('csv-file').value = '';
+}
+
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('over');
+  const f = e.dataTransfer.files[0];
+  if (f) uploadCSV(f);
+}
+
+async function loadSample() {
+  const r = await fetch('/api/load_sample', {method:'POST'});
+  const d = await r.json();
+  toast('⚡ ' + d.message);
+  refreshCounters();
+  setTimeout(() => location.href = '/dashboard', 1000);
+}
+
+async function clearAll() {
+  if (!confirm('Clear all income and expense data?')) return;
+  await fetch('/api/reset', {method:'POST'});
+  toast('🗑 All data cleared');
+  refreshCounters();
+}
+
+// ── Theme toggle ──
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-btn').textContent = theme === 'light' ? '🌙' : '☀️';
+  localStorage.setItem('biq-theme', theme);
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+// Apply saved theme immediately
+applyTheme(localStorage.getItem('biq-theme') || 'dark');
+
+// Init
+refreshCounters();
+</script>
+</body>
+</html>
